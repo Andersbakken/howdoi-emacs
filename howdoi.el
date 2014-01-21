@@ -44,7 +44,9 @@
 (defun howdoi (beg end)
   "Replace the region from BEG to END with the howdoi search results for that text."
   (interactive "r")
-  (let ((terms (buffer-substring beg end)))
+  (let ((terms (cond ((and mark-active > 0 (abs (- beg end)))
+                      ((buffer-substring-no-properties beg end)))
+                     (t (read-from-minibuffer "How do I: ")))))
     (shell-command-on-region
      beg
      end
